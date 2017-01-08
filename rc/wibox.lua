@@ -60,7 +60,7 @@ mytasklist.buttons = awful.util.table.join(
 -- CPU temp --
 local thermalwidget  = wibox.widget.textbox()
 vicious.register( thermalwidget,
-    vicious.widgets.thermal_freebsd,
+    vicious.widgets.thermal,
     function(widget, args)
         local labels = { "Mobo", "CPU" }
         local var = ""
@@ -88,21 +88,25 @@ vicious.register( thermalwidget,
 -- fanspeed --
 local fanspeedwidget = wibox.widget.textbox()
 vicious.register( fanspeedwidget,
-    vicious.widgets.fanspeed_freebsd,
+    vicious.widgets.fanspeed,
     function(widget, args)
         local var = "<span color='yellow'>@</span>"
         --local var = "@"
         local speed = tonumber(args[1])
-        if speed < 1500 then
-            var = var .. "<span color='cyan'>"
-        elseif speed < 2250 then
-            var = var .. "<span color='yellow'>"
-        elseif speed < 3000 then
-            var = var .. "<span color='orange'>"
+        if speed < 0 then
+            return var .. "<span color='orange'>N/A</span> |"
         else
-            var = var .. "<span color='red'>"
+            if speed < 1500 then
+                var = var .. "<span color='cyan'>"
+            elseif speed < 2250 then
+                var = var .. "<span color='yellow'>"
+            elseif speed < 3000 then
+                var = var .. "<span color='orange'>"
+            else
+                var = var .. "<span color='red'>"
+            end
+            return var .. speed .. "</span>RPM |"
         end
-        return var .. speed .. "</span>RPM |"
     end,
     5,
     -- no table support, yet
@@ -112,7 +116,7 @@ vicious.register( fanspeedwidget,
 -- Memory usage
 memwidget = wibox.widget.textbox()
 vicious.register( memwidget,
-    vicious.widgets.mem_freebsd,
+    vicious.widgets.mem,
     function(widget, args)
         local var=""
         if args[1] >= 75 then
@@ -125,42 +129,23 @@ vicious.register( memwidget,
             var = "<span color='cyan'>"
         end
         -- show: "45% [48%,92%]" -> (active+inactive)[(buffered+wired)%,(used)%]
-        var = "Mem:" .. var .. args[1] .. "% [" .. args[7] .. "," .. args[6] .. "]</span> |"
+        var = "Mem:" .. var .. args[1] .. "% [" .. args[11] .. "," .. args[10] .. "]</span> |"
         return var
     end,
     5
 )
 
---  battery --
--- batwidget = wibox.widget.textbox()
--- vicious.register( batwidget,
---     vicious.widgets.bat_freebsd,
---     function(widget, args)
---         var=args[2] .. "%" .. args[1] .. " (".. args[3] ..")</span>"
---         if args[2] >= 75 then
---             var = "<span color='cyan'>"  .. var
---         elseif args[2] >= 50 then
---             var = "<span color='yellow'>" .. var
---         elseif args[2] >= 25 then
---             var = "<span color='orange'>" .. var
---         else
---             var = "<span color='red'>" .. var
---         end
---         return " Bat: " .. var .. " "
---     end,
---     10
--- )
 batwidget = wibox.widget.textbox()
-
 vicious.register( batwidget,
     vicious.widgets.bat_acpi,
     function(widget, args)
         -- return: state, percent, time, rate
         var=args[2] .. "%" .. args[1] .. " (".. args[3] .."|" .. args[4] .. "W)</span>"
         if args[2] >= 90 then
+            -- var = "<span color='cyan'>"  .. var
             var = "<span color='cyan'>"  .. var
         elseif args[2] >= 50 then
-            var = "<span color='green'>" .. var
+            var = "<span color='lightgreen'>" .. var
         elseif args[2] >= 30 then
             var = "<span color='yellow'>" .. var
         elseif args[2] >= 15 then
