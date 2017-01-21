@@ -115,7 +115,7 @@ vicious.register( fanspeedwidget,
 )
 
 -- Memory usage
-memwidget = wibox.widget.textbox()
+local memwidget = wibox.widget.textbox()
 vicious.register( memwidget,
     vicious.widgets.mem,
     function(widget, args)
@@ -136,14 +136,13 @@ vicious.register( memwidget,
     5
 )
 
-batwidget = wibox.widget.textbox()
+local batwidget = wibox.widget.textbox()
 vicious.register( batwidget,
-    vicious.widgets.bat_acpi,
+    vicious.widgets.bat,
     function(widget, args)
         -- return: state, percent, time, rate
-        var=args[2] .. "%" .. args[1] .. " (".. args[3] .."|" .. args[4] .. "W)</span>"
+        var=args[2] .. "%" .. args[1] .. " (".. args[3] .. "|"  .. args[5] .. "W)</span>"
         if args[2] >= 90 then
-            -- var = "<span color='cyan'>"  .. var
             var = "<span color='cyan'>"  .. var
         elseif args[2] >= 50 then
             var = "<span color='lightgreen'>" .. var
