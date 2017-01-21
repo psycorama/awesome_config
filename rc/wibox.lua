@@ -67,16 +67,17 @@ vicious.register( thermalwidget,
         local cnt = 1
         while cnt <= #args do
             var = var .. " " .. labels[cnt]
-            if args[cnt] >= 65 then
+            value = tonumber(args[cnt])
+            if value >= 65 then
                 var = var .. " <span color='red'>"
-            elseif args[cnt] >= 50 then
+            elseif value >= 50 then
                 var = var .. " <span color='orange'>"
-            elseif args[cnt] >= 35 then
+            elseif value >= 35 then
                 var = var .. " <span color='yellow'>"
             else
                 var = var .. " <span color='cyan'>"
             end
-            var = var .. args[cnt] .. "°C</span>"
+            var = var .. value .. "°C</span>"
             cnt = cnt + 1
         end
         return "|" .. var
