@@ -86,6 +86,9 @@ config.keys.global = awful.util.table.join(
     awful.key({ altkey, "Shift" }, "F8", function() awful.util.spawn( "/home/andy/scripte/keyboard_settings.sh") end),
     -- lockscreen
     awful.key({ altkey, "Control" }, "Return", function() awful.util.spawn( "/home/andy/scripte/lock_it.sh") end),
+    -- volume slider
+    awful.key({ altkey,           }, "Up",   function() awful.util.spawn( "/home/andy/scripte/osd_volume.sh +") end),
+    awful.key({ altkey,           }, "Down", function() awful.util.spawn( "/home/andy/scripte/osd_volume.sh -") end),
     -- standard programs
     awful.key({ altkey,           }, "u", function () awful.util.spawn(terminal) end),
     awful.key({ modkey, "Control" }, "r", awesome.restart),
