@@ -57,6 +57,54 @@ mytasklist.buttons = awful.util.table.join(
 )
 
 -- ########### registration for widgets #############
+-- CPU speed
+local cpufreqwidget  = wibox.widget.textbox()
+vicious.register(
+    cpufreqwidget,
+    vicious.widgets.cpufreq,
+    function(widget, args)
+        local var = ""
+        var = var .. args[1] .. " MHz"
+        return "|" .. var
+    end,
+    5,
+    "0"
+)
+
+-- helper table for SPEEDometer
+-- speeds: [_. ], [-. ], [\. ], [ | ], [ ./], [ .-], [ ._]
+local cslut = {
+    [1199] = "<span color='cyan'>_. ",
+    [1333] = "<span color='lightgreen'>-. ",
+    [1466] = "<span color='lightgreen'>\\. ",
+    [1599] = "<span color='lightgreen'>\\. ",
+    [1733] = "<span color='lightgreen'> | ",
+    [1866] = "<span color='lightgreen'> | ",
+    [1999] = "<span color='lightgreen'> ./",
+    [2133] = "<span color='yellow'> ./",
+    [2266] = "<span color='orange'> .-",
+    [2399] = "<span color='red'> .-",
+    [2533] = "<span color='red'> ._",
+    [2534] = "<span color='red'> ._"
+}
+-- SPEEDometer --
+local speedometerwidget  = wibox.widget.textbox()
+vicious.register(
+    speedometerwidget,
+    vicious.widgets.cpufreq,
+    function(widget, args)
+        local var = ""
+        local clock = tonumber(args[1])
+        var = cslut[clock]
+        if var == nil then
+            var = "<span color='cyan'> * </span>"
+        end
+        return "| [" .. var .. "</span>] "
+    end,
+    5,
+    "0"
+)
+
 -- CPU temp --
 local thermalwidget  = wibox.widget.textbox()
 vicious.register( thermalwidget,
@@ -189,7 +237,8 @@ for s = 1, screen.count() do
     local right_layout = wibox.layout.fixed.horizontal()
     if s == 1 then right_layout:add(wibox.widget.systray()) end
     right_layout:add(mytextclock) -- @todo: this needs updating
-    -- right_layout:add(speedometerwidget)
+--    right_layout:add(cpufreqwidget)
+    right_layout:add(speedometerwidget)
     right_layout:add(thermalwidget)
     right_layout:add(fanspeedwidget)
     right_layout:add(memwidget)
